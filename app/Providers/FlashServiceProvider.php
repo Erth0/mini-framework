@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Providers;
+
+use App\Session\Flash;
+use App\Session\SessionStore;
+use League\Container\ServiceProvider\AbstractServiceProvider;
+
+class FlashServiceProvider extends AbstractServiceProvider
+{   
+    /**
+     * Provides
+     *
+     * @var array
+     */
+    protected $provides = [
+        Flash::class
+    ];
+
+    /**
+     * Register in the container
+     *
+     * @return void
+     */
+    public function register()
+    {
+          $container = $this->getContainer();
+
+          $container->share(Flash::class, function() use ($container) {
+              return new Flash(
+                  $container->get(SessionStore::class)
+              );
+          });
+    }
+}

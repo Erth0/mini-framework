@@ -8,6 +8,11 @@ use App\Config\Loaders\Loader;
 
 class ArrayLoader implements Loader
 {
+    /**
+     * Array Files
+     *
+     * @var string
+     */ 
     protected $files;
 
 
@@ -16,6 +21,11 @@ class ArrayLoader implements Loader
         $this->files = $files;
     }
 
+    /**
+     * Parses the array from the given files
+     *
+     * @return array $parsed
+     */
     public function parse()
     {
         $parsed = [];

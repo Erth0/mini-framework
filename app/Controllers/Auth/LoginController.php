@@ -12,14 +12,42 @@ use App\Session\Flash;
 
 class LoginController extends Controller
 {
+    /**
+     * Twig 
+     *
+     * @var object $auth
+     */
     protected $view;
 
+    /**
+     * Auth
+     *
+     * @var object $auth
+     */
     protected $auth;
 
+    /**
+     * RouteCollection
+     *
+     * @var object $route
+     */
     protected $route;
-
+    
+    /**
+     * Flash
+     *
+     * @var object $flash
+     */
     protected $flash;
 
+    /**
+     * Initializes the given classes when class is created
+     *
+     * @param View $view
+     * @param Auth $auth
+     * @param RouteCollection $route
+     * @param Flash $flash
+     */
     public function __construct(View $view, Auth $auth, RouteCollection $route, Flash $flash) 
     {
         $this->view = $view;
@@ -28,13 +56,25 @@ class LoginController extends Controller
         $this->flash = $flash;
     }
 
-
+    /**
+     * Returns the login page 
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return void
+     */
     public function index(RequestInterface $request, ResponseInterface $response)
     {
         return $this->view->render($response, 'auth/login.twig');
     }
 
-
+    /**
+     * Sign in the user
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return void
+     */
     public function signin(RequestInterface $request, ResponseInterface $response)
     {
         $data = $this->validate($request, [

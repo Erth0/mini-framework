@@ -51,7 +51,13 @@ require_once base_path('routes/web.php');
 try {
     $response = $route->dispatch($container->get('request'), $container->get('response'));
 } catch (Exception $e) {
-    $handler = new \App\Exceptions\Handler($e, $container->get(\App\Session\SessionStore::class));
+    $handler = new \App\Exceptions\Handler(
+        $e, 
+        $container->get(\App\Session\SessionStore::class),
+        $container->get('response'),
+        $container->get(\App\Views\View::class)
+
+    );
 
     $response = $handler->respond();
 }

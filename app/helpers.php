@@ -1,5 +1,8 @@
 <?php 
 
+/**
+ * Redirect to a particular path
+ */
 if (! function_exists('redirect')) {
 
     function redirect($path) {
@@ -7,6 +10,9 @@ if (! function_exists('redirect')) {
     }
 }
 
+/**
+ * Returns the base path
+ */
 if (! function_exists('base_path')) {
 
     function base_path($path = '') {
@@ -14,6 +20,9 @@ if (! function_exists('base_path')) {
     }
 }
 
+/**
+ * Function for getting the enviroment variables
+ */
 if (! function_exists('env')) {
 
     function env($key, $default = null) {

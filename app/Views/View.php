@@ -36,6 +36,12 @@ class View
         return $response;
     }
 
+    /**
+     * Share data to view on global scope
+     *
+     * @param array $data
+     * @return void
+     */
     public function share(array $data)
     {
         foreach ($data as $key => $value) {

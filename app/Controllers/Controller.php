@@ -7,6 +7,13 @@ use App\Exceptions\ValidationException;
 
 abstract class Controller 
 {
+    /**
+     * Validates the request with the given rules
+     *
+     * @param object $request
+     * @param array $rules
+     * @return object $request parsed body
+     */
     public function validate($request, array $rules)
     {
         $validator = new Validator($request->getParsedBody());

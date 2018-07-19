@@ -19,7 +19,13 @@ abstract class Model {
 
         return false;
     }
-
+    
+    /**
+     * Update database based on give columns and data
+     *
+     * @param array $columns
+     * @return void
+     */
     public function update(array $columns)
     {
         foreach ($columns as $column => $value) {

@@ -13,6 +13,7 @@ return [
         '\App\Providers\HashServiceProvider',
         '\App\Providers\AuthServiceProvider',
         '\App\Providers\FlashServiceProvider',
+        '\App\Providers\CsrfServiceProvider',
         '\App\Providers\ViewShareServiceProvider',
     ],
 
@@ -20,5 +21,6 @@ return [
         '\App\Middleware\ShareValidationErrors',
         '\App\Middleware\ClearValidationErrors',
         '\App\Middleware\Authenticate',
+        '\App\Middleware\CsrfGuard',
     ]
 ];

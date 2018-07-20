@@ -31,7 +31,7 @@ class CsrfGuard
 
     protected function getTokenFromRequest($request) 
     {
-        return $request->getParsedBody()[$this->csrf->key() ?? null];
+        return $request->getParsedBody()[$this->csrf->key()] ?? null;
     }
 
     protected function requestRequiresProtection($request)

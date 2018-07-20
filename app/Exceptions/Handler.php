@@ -90,7 +90,7 @@ class Handler
      */
     public function handleCsrfTokenException(Exception $e)
     {
-        $this->view->render($this->response, 'erros/csrf.twig');
+        return $this->view->render($this->response, 'errors/csrf.twig');
     }
 
     /**

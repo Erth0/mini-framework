@@ -3,20 +3,16 @@
 namespace App\Auth;
 
 use Exception;
-use App\Models\User;
+use App\Auth\Recaller;
 use App\Auth\Hashing\Hasher;
 use App\Session\SessionStore;
 use Doctrine\ORM\EntityManager;
+use App\Cookie\CookieJar;
+use App\Auth\Providers\UserProvider;
 
 
 class Auth 
 {
-    /**
-     * Database EntityManager
-     *
-     * @var $db
-     */
-    protected $db;
 
     /**
      * Hasher  
@@ -26,24 +22,60 @@ class Auth
     protected $hash;
 
     /**
-     * Session
-     *
-     * @var $session
-     */
-    protected $session;
-
-    /**
      * User
      *
      * @var $user
      */
     protected $user;
 
-    public function __construct(EntityManager $db, Hasher $hash, SessionStore $session) 
+    /**
+     * Session
+     *
+     * @var $session
+     */
+    protected $session;
+
+
+    /**
+     * Recaller
+     *
+     * @var $recaller
+     */
+    protected $recaller;
+
+    /**
+     * CookieJar
+     *
+     * @var $cookie
+     */
+    protected $cookie;
+
+    /**
+     * UserProvider
+     *
+     * @var $provider
+     */ 
+    protected $provider;
+
+    public function __construct(Hasher $hash, SessionStore $session, Recaller $recaller, CookieJar $cookie, UserProvider $provider) 
     {
-        $this->db = $db;
         $this->hash = $hash;
         $this->session = $session;
+        $this->recaller = $recaller;
+        $this->cookie = $cookie;
+        $this->provider = $provider;
+    }
+
+    /**
+     * Logout clear user session
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $this->provider->clearUserRememberToken($this->user->id);
+        $this->cookie->clear('remember');
+        $this->session->clear($this->key());
     }
 
     /**
@@ -54,22 +86,61 @@ class Auth
      * @param string $password
      * @return boolean
      */
-    public function attempt($username, $password)
+    public function attempt($username, $password, $remember = false)
     {
-        $user = $this->getByUsername($username);
+        $user = $this->provider->getByUsername($username);
 
         if (!$user || !$this->hasValidCredentials($user, $password)) {
             return false;
         }
 
         if ($this->needsRehash($user)) {
-            $this->rehashPassword($user, $password);
+            $this->provider->updateUserPasswordHash($user->id, $this->hash->create($password));
         }
         
         $this->setUserSession($user);
 
+        if ($remember) {
+            $this->setRememberToken($user);
+        }
+
         return true;
 
+    }
+
+    public function setUserFromCookie()
+    {
+        list($identifier, $token) = $this->recaller->splitCookieValue($this->cookie->get('remember'));
+        
+        if (!$this->provider->getUserByRememberIdentifier($identifier)) {
+            $this->cookie->clear('remember');
+            return;
+        }
+
+        if(!$user = $this->recaller->validateToken($token, $user->remember_token)){
+            
+            $this->provider->clearUserRememberToken($this->user->id);
+
+            $this->cookie->clear('remember');
+
+            throw new Exception("Error Processing Request");
+        }
+
+        $this->setUserSession($user);
+    }
+
+    public function hasRecaller()
+    {
+        return $this->cookie->exists('remember');
+    }
+
+    protected function setRememberToken($user) 
+    {
+        list($identifier, $token) = $this->recaller->generate();
+
+        $this->cookie->set('remember', $this->recaller->generateValueForCookie($identifier, $token));
+
+        $this->provider->setUserRememberToken($user->id, $identifier, $this->recaller->getTokenHashForDatabase($token));
     }
 
     /**
@@ -83,21 +154,6 @@ class Auth
         return $this->hash->needsRehash($user->password);
     }
 
-    /**
-     * Rehash the password and updates the database
-     *
-     * @param object $user
-     * @param string $password
-     * @return void
-     */
-    protected function rehashPassword($user, $password)
-    {
-        $this->db->getRepository(User::class)->find($user->id)->update([
-            'password' => $this->hash->create($password)
-        ]);
-
-        $this->db->flush();
-    }
 
     /**
      * Retunrs the current user
@@ -137,7 +193,7 @@ class Auth
      */
     public function setUserFromSession()
     {
-        $user = $this->getById($this->session->get($this->key()));
+        $user = $this->provider->getById($this->session->get($this->key()));
 
         if (!$user) {
             throw new Exception('User not found');
@@ -176,27 +232,4 @@ class Auth
         return $this->hash->check($password, $user->password);
     }
 
-    /**
-     * Get an user from database by id
-     *
-     * @param integer $id
-     * @return $user
-     */
-    protected function getById($id)
-    {
-        return $this->db->getRepository(User::class)->find($id);
-    }
-
-    /**
-     * Get an user from database by email
-     *
-     * @param string $username
-     * @return $user
-     */
-    protected function getByUsername($username)
-    {
-        return $this->db->getRepository(User::class)->findOneBy([
-            'email' => $username
-        ]);
-    }
 }

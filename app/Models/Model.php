@@ -32,4 +32,9 @@ abstract class Model {
             $this->{$column} = $value;
         }
     }
+
+    public function fill(array $columns)
+    {
+        $this->update($columns);
+    }
 }

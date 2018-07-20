@@ -5,7 +5,7 @@ namespace App\Middleware;
 use Exception;
 use App\Auth\Auth;
 
-class Authenticate 
+class AuthenticateFromCookie 
 {
     protected $auth;
 
@@ -24,13 +24,18 @@ class Authenticate
      */
     public function __invoke($request, $response, callable $next)
     {
-        if ($this->auth->hasUserInSession()) {
+        if ($this->auth->check()) {
+            return $next($request, $response);
+        }
+
+        if ($this->auth->hasRecaller()) {
             try {
-                $this->auth->setUserFromSession();
+                $this->auth->setUserFromCookie();
             } catch (Exception $e) {
                 $this->auth->logout();
             }
         }
+
         return $next($request, $response);
     }
 }

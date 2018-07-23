@@ -11,7 +11,6 @@ use League\Route\RouteCollection;
 use App\Session\Flash;
 use App\Models\User;
 use App\Auth\Hashing\Hasher;
-use Doctrine\ORM\EntityManager;
 
 class RegistrationController extends Controller
 {
@@ -43,24 +42,17 @@ class RegistrationController extends Controller
      */
     protected $route;
     
-    /**
-     * EntityManager
-     *
-     * @var $db
-     */
-    protected $db;
 
     /**
      * Initializes the given classes when class is created
      *
      * @param View $view
      */
-    public function __construct(View $view, Hasher $hash, RouteCollection $route, EntityManager $db, Auth $auth) 
+    public function __construct(View $view, Hasher $hash, RouteCollection $route, Auth $auth) 
     {
         $this->view = $view;
         $this->hash = $hash;
         $this->route = $route;
-        $this->db = $db;
         $this->auth = $auth;
     }
 
@@ -99,19 +91,11 @@ class RegistrationController extends Controller
 
     protected function createUser($data) 
     {
-        $user = new User;
-
-        $user->fill([
+        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $this->hash->create($data['password'])
         ]);
-
-        $this->db->persist($user);
-        $this->db->flush();
-
-        return $user;
-
     }
 
     protected function validateRegistration($request)

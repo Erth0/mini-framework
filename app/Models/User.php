@@ -2,47 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * @Entity @Table(name="users")
- */
 class User extends Model
 {
-    /**
-     * @GeneratedValue(strategy="AUTO")
-     *
-     * @Id @Column(name="id", type="integer", nullable=false)
-     */
-    protected $id;
+    public $timestamps = false;
 
-    /**
-     * @name @Column(type="string")
-     *
-     */
-    protected $name;
-
-    /**
-     * @email @Column(type="string")
-     *
-     */
-    protected $email;
-
-    /**
-     * @password @Column(type="string")
-     *
-     */
-    protected $password;
-
-    /**
-     * @remember_token @Column(type="string")
-     *
-     */
-    protected $remember_token;
-
-    /**
-     * @remember_identifier @Column(type="string")
-     *
-     */
-    protected $remember_identifier;
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'remember_token',
+        'remember_identifier'
+    ];
 }

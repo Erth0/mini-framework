@@ -9,6 +9,7 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
@@ -42,10 +43,12 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\VarDumper\\' => 28,
+            'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
         ),
@@ -57,6 +60,10 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
         'I' => 
         array (
             'Interop\\Container\\' => 18,
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Database\\' => 20,
+            'Illuminate\\Contracts\\' => 21,
+            'Illuminate\\Container\\' => 21,
         ),
         'F' => 
         array (
@@ -107,9 +114,17 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
+        'Symfony\\Component\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
+        ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -130,6 +145,22 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
+        ),
+        'Illuminate\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/support',
+        ),
+        'Illuminate\\Database\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/database',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
+        'Illuminate\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/container',
         ),
         'FastRoute\\' => 
         array (
@@ -172,6 +203,10 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
         ),
     );
 
+    public static $fallbackDirsPsr4 = array (
+        0 => __DIR__ . '/..' . '/nesbot/carbon/src',
+    );
+
     public static $prefixesPsr0 = array (
         'T' => 
         array (
@@ -202,6 +237,7 @@ class ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit150f198cbdc7f160dd91aeed8ae31935::$prefixesPsr0;
 
         }, null, ClassLoader::class);

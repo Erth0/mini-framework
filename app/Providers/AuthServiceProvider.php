@@ -32,9 +32,7 @@ class AuthServiceProvider extends AbstractServiceProvider
         $container = $this->getContainer();     
         
         $container->share(Auth::class, function () use ($container) {
-            $provider = new DatabaseProvider(
-                $container->get(EntityManager::class)
-            );
+            $provider = new DatabaseProvider();
 
             return new Auth(
                 $container->get(Hasher::class),

@@ -3,17 +3,10 @@
 namespace App\Auth\Providers;
 
 use App\Models\User;
-use Doctrine\ORM\EntityManager;
 use App\Auth\Providers\UserProvider;
 
 class DatabaseProvider implements UserProvider
 {
-    protected $db;
-    
-    public function __construct(EntityManager $db) 
-    {
-        $this->db = $db;
-    }
 
     /**
      * Get an user from database by email
@@ -23,9 +16,7 @@ class DatabaseProvider implements UserProvider
      */
     public function getByUsername($username)
     {
-        return $this->db->getRepository(User::class)->findOneBy([
-            'email' => $username
-        ]);
+        return User::where('email', $username)->first();
     }
 
 
@@ -37,7 +28,7 @@ class DatabaseProvider implements UserProvider
      */
     public function getById($id)
     {
-        return $this->db->getRepository(User::class)->find($id);
+        return User::find($id);
     }
 
 
@@ -50,39 +41,32 @@ class DatabaseProvider implements UserProvider
      */
     public function updateUserPasswordHash($id, $hash)
     {
-        $this->db->getRepository(User::class)->find($id)->update([
+        return User::find($id)->update([
             'password' => $hash
         ]);
 
-        $this->db->flush();
     }
 
 
     public function getUserByRememberIdentifier($identifier)
     {
-        return $this->db->getRepository(User::class)->findOneBy([
-            'remember_identifier' => $identifier
-        ]);
+        return User::where('remember_identifier', $identifier)->first();;
     }
 
 
     public function clearUserRememberToken($id) 
     {
-        $this->db->getRepository(User::class)->find($id)->update([
+        return User::find($id)->update([
             'remember_identifier' => null,
             'remember_token' => null
         ]);
-
-        $this->db->flush();
     }
 
     public function setUserRememberToken($id, $identifier, $token) 
     {
-        $this->db->getRepository(User::class)->find($id)->update([
+        return User::find($id)->update([
             'remember_identifier' => $identifier,
             'remember_token' => $token
         ]);
-
-        $this->db->flush();
     }
 }
